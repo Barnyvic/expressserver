@@ -8,10 +8,10 @@ const getAllUsers = async (req, res) => {
     // Changing the format at which the users are returned
     const USER = users.map((user) => ({
         ID: user.id,
-        Name: user.name,
-        Email: user.email,
+        Name: user.Name,
+        Email: user.Email,
         DateOFBirth: user.dateOfbirth.toString(),
-        Role: user.role
+        UserName: user.UserName
     }));
     // sending the user back to the frontend
     res.send(USER).status(200);
@@ -52,13 +52,12 @@ const createNewUser = async (req, res) => {
 // LOGIN A USER
 const login = async (req, res) => {
     try {
-        const user = await User.findOne({ email: req.body.email });
+        const user = await User.findOne({ UserName: req.body.Useraname });
         if (!user) return res.status(403).send('User not  registered');
-        if (user.password !== req.body.password) return res.status(403).send('Email or Password not correct');
-        req.userId = user.id;
-        return res.send(user);
+        if (user && (await bcrypt.compare(req.body.Password, user.Password))) return res.send(user);
+        else return res.status(403).send('Incorrect password');
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send(error.message);
     }
 };
 
