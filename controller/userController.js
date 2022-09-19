@@ -1,4 +1,5 @@
 const User = require('../model/userModel');
+const bcrypt = require('bcrypt');
 
 //GETTING ALL USERS FROM DATABASE
 const getAllUsers = async (req, res) => {
@@ -19,17 +20,29 @@ const getAllUsers = async (req, res) => {
 // CREATING A NEW USER
 const createNewUser = async (req, res) => {
     // getting the users from req.body
-    const user = new User(req.body);
+    const { name, email, password, UserName, dateOfbirth } = req.body;
+
     try {
         // Getting already exsiting users from the database
-        const Allusers = await User.find();
+        const user = await User.findOne({ email, name });
         // checking if user already exsis in the databases
-        userName = Allusers.find((users) => users.name === user.name);
-        if (userName) return res.send('User already exists');
+        if (user) return res.status(400).send('User already exists');
+
+        // Hashing the password
+        const salt = await bcrypt.genSalt(12);
+        const hashPassword = await bcrypt.hash(password, salt);
+
         // Saving the new user to the database
-        await user.save();
+        const NewUser = await User.create({
+            Name: name,
+            Email: email,
+            Password: hashPassword,
+            dateOfbirth: dateOfbirth.toString(),
+            UserName: UserName
+        });
+
         // sending tthe user back
-        res.send(user).status(201);
+        res.send(NewUser).status(201);
     } catch (error) {
         console.log(error.message.red);
         res.send(error.message).status(400);
