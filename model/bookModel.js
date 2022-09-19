@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const bookShema = new mongoose.Schema({
-    isbn: {
+    ISBN: {
         type: Number,
         required: true
     },
