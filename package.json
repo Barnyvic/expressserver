@@ -1,0 +1,25 @@
+{
+  "name": "expressserver",
+  "version": "1.0.0",
+  "description": "backend sever for books and users ",
+  "main": "App.js",
+  "author": "BARNY VICTOR",
+  "license": "MIT",
+  "scripts": {
+    "start": "node App.js",
+    "dev": "nodemon App.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "colors": "^1.4.0",
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1",
+    "mongoose": "^6.6.1",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.19"
+  },
+  "devDependencies": {
+    "jest": "^29.0.3",
+    "supertest": "^6.2.4"
+  }
+}
