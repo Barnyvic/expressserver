@@ -1,19 +1,4 @@
 const BOOKS = require('../model/bookModel');
-const User = require('../model/userModel');
-
-// authenticate if user exist in the DATABASES
-const authenticateUser = async (req, res, next) => {
-    const { name, password } = req.body;
-    try {
-        //checking if user exist in the DATABASES;
-        const users = await User.findOne({ name, password });
-        if (!users) return res.send('Invalid Name or Password').status(400);
-        next();
-    } catch (error) {
-        console.log(error.message.red);
-        res.send(error.message);
-    }
-};
 
 // getting AllBooks  from DATABASE
 const getAllBooks = async (req, res) => {
@@ -46,4 +31,4 @@ const DeleteABook = async (req, res) => {
     res.send('hello world this is to delete an existing book');
 };
 
-module.exports = { getAllBooks, CreateBooks, UpdateABook, DeleteABook, authenticateUser };
+module.exports = { getAllBooks, CreateBooks, UpdateABook, DeleteABook };
