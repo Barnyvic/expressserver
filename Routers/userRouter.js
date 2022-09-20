@@ -3,7 +3,8 @@ const userRouter = express.Router();
 const { getAllUsers, createNewUser, UpdateUser, deleteUser, login } = require('../controller/userController');
 
 // route for post and getAllUsers
-userRouter.route('/').get(getAllUsers).post(createNewUser);
+userRouter.route('/').get(getAllUsers);
+userRouter.route('/signup').post(createNewUser);
 userRouter.route('/login').post(login);
 
 // Route for delete and updateUsers

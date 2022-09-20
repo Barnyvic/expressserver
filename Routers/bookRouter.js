@@ -1,11 +1,11 @@
 const express = require('express');
 const Bookrouter = express.Router();
 const { getAllBooks, CreateBooks, UpdateABook, DeleteABook } = require('../controller/bookControllers');
-const { authorizeUser } = require('../authentication/authorization');
+const VerifyToken = require('.././authentication/autentication');
 
 // BOOK ROUTES
 //GET ROUTES AND POST
-Bookrouter.route('/').get(getAllBooks).post(authorizeUser, CreateBooks);
+Bookrouter.route('/').get(getAllBooks).post(VerifyToken, CreateBooks);
 
 // UPDATE AND DELETE
 Bookrouter.route('/:id').put(UpdateABook).delete(DeleteABook);

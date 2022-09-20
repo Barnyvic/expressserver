@@ -1,5 +1,6 @@
 const User = require('../model/userModel');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 //GETTING ALL USERS FROM DATABASE
 const getAllUsers = async (req, res) => {
@@ -19,30 +20,39 @@ const getAllUsers = async (req, res) => {
 
 // CREATING A NEW USER
 const createNewUser = async (req, res) => {
-    // getting the users from req.body
+    // Get user input.
     const { name, email, password, UserName, dateOfbirth } = req.body;
 
+    //Validate user input
+    if (!(email && password && name && dateOfbirth)) {
+        res.status(400).send('All input is required');
+    }
     try {
-        // Getting already exsiting users from the database
-        const user = await User.findOne({ email, name });
+        // Validate if the user already exists.
+        const Allusers = await User.find();
+        const oneUser = Allusers.find((user) => user.Name === name);
         // checking if user already exsis in the databases
-        if (user) return res.status(400).send('User already exists');
+        if (oneUser) return res.status(409).send('User Already Exist. Please Login');
 
-        // Hashing the password
+        // Encrypt the user password.
         const salt = await bcrypt.genSalt(12);
         const hashPassword = await bcrypt.hash(password, salt);
 
-        // Saving the new user to the database
+        // Create a user in our database.
         const NewUser = await User.create({
             Name: name,
             Email: email,
             Password: hashPassword,
-            dateOfbirth: dateOfbirth.toString(),
+            dateOfbirth: dateOfbirth,
             UserName: UserName
         });
 
+        //create a signed JWT token.
+        const token = jwt.sign({ userId: NewUser._id }, process.env.JWT_SECRET, { expiresIn: '3h' });
+        NewUser.TOKEN = token;
+
         // sending tthe user back
-        res.send(NewUser).status(201);
+        res.status(201).send(NewUser);
     } catch (error) {
         console.log(error.message.red);
         res.send(error.message).status(400);
@@ -51,11 +61,27 @@ const createNewUser = async (req, res) => {
 
 // LOGIN A USER
 const login = async (req, res) => {
+    // Get user input
+    const { Username, Password } = req.body;
+    // Validate user input
+    if (!(Username && Password)) return res.status(400).send('All input is required');
     try {
-        const user = await User.findOne({ UserName: req.body.Useraname });
+        // Validate if the user exists.
+        const users = await User.find();
+        const user = users.find((user) => user.UserName === Username);
+
+        // If user is not found in the database
         if (!user) return res.status(403).send('User not  registered');
-        if (user && (await bcrypt.compare(req.body.Password, user.Password))) return res.send(user);
-        else return res.status(403).send('Incorrect password');
+
+        // Verify user password against the password we saved earlier in our database.
+        if (user && (await bcrypt.compare(Password, user.Password))) {
+            //create a signed JWT token
+            const token = jwt.sign({ Username, userId: user._id }, process.env.JWT_SECRET, { expiresIn: '2h' });
+            user.TOKEN = token;
+
+            // sending back to the user
+            res.status(200).send(user);
+        } else return res.status(403).send('Incorrect password');
     } catch (error) {
         res.status(500).send(error.message);
     }
