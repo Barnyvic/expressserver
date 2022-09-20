@@ -4,8 +4,8 @@ const { getAllUsers, createNewUser, UpdateUser, deleteUser, login } = require('.
 
 // route for post and getAllUsers
 userRouter.route('/').get(getAllUsers);
-userRouter.route('/signup').post(createNewUser);
-userRouter.route('/login').post(login);
+userRouter.route('/auth/signup').post(createNewUser);
+userRouter.route('/auth/signin').post(login);
 
 // Route for delete and updateUsers
 userRouter.route('/:id').put(UpdateUser).delete(deleteUser);

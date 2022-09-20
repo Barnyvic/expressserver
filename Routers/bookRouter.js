@@ -1,7 +1,7 @@
 const express = require('express');
 const Bookrouter = express.Router();
 const { getAllBooks, CreateBooks, UpdateABook, DeleteABook } = require('../controller/bookControllers');
-const VerifyToken = require('.././authentication/autentication');
+const VerifyToken = require('../middleware/autentication');
 
 // BOOK ROUTES
 //GET ROUTES AND POST
