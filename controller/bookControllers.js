@@ -2,13 +2,18 @@ const BOOKS = require('../model/bookModel');
 
 // getting AllBooks  from DATABASE
 const getAllBooks = async (req, res) => {
+    // implementing pagination
+    const { page, limit } = req.query;
     // implementing search in the api
     let filter = {};
     if (req.query.bookauthor) {
         filter = { bookAuthor: req.query.bookauthor };
     }
     try {
-        const AllBooks = await BOOKS.find(filter);
+        const AllBooks = await BOOKS.find(filter)
+            .limit(limit * 1)
+            .skip((page - 1) * limit)
+            .exec();
         const result = AllBooks.map((book) => ({
             ID: book._id,
             ISBN: book.ISBN,

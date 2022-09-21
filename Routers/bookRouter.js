@@ -8,6 +8,6 @@ const { VerifyToken, authorizeUser } = require('../middleware/autentication');
 Bookrouter.route('/').get(VerifyToken, getAllBooks).post(VerifyToken, authorizeUser, CreateBooks);
 
 // UPDATE AND DELETE
-Bookrouter.route('/:id').put(UpdateABook).delete(VerifyToken, DeleteABook).get(VerifyToken, getAbook);
+Bookrouter.route('/:id').put(VerifyToken, UpdateABook).delete(VerifyToken, DeleteABook).get(VerifyToken, getAbook);
 
 module.exports = Bookrouter;
