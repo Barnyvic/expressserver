@@ -4,7 +4,26 @@ const BOOKS = require('../model/bookModel');
 const getAllBooks = async (req, res) => {
     try {
         const AllBooks = await BOOKS.find();
-        res.send(AllBooks).status(200);
+        const result = AllBooks.map((book) => ({
+            ID: book._id,
+            ISBN: book.ISBN,
+            AUTHOR: book.bookAuthor,
+            TITLE: book.bookTitle,
+            DESCRIPTION: book.bookDescription
+        }));
+        res.status(200).send(result);
+    } catch (error) {
+        console.log(error.message.red);
+        res.status(400).send(error.message);
+    }
+};
+
+const getAbook = async (req, res) => {
+    try {
+        const Abook = await BOOKS.findOne({
+            _id: req.params.id
+        });
+        res.status(200).send(Abook);
     } catch (error) {
         console.log(error.message.red);
         res.status(400).send(error.message);
@@ -32,11 +51,27 @@ const CreateBooks = async (req, res) => {
 };
 
 const UpdateABook = async (req, res) => {
-    // res.send('hello world this is to update an existing book');
+    try {
+        const UPDATEbook = await BOOKS.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidators: true
+        });
+        res.status(200).send('Book updated successfully....');
+    } catch (error) {
+        console.log(error.message.red);
+        res.status(400).send(error.message);
+    }
 };
 
 const DeleteABook = async (req, res) => {
-    // res.send('hello world this is to delete an existing book');
+    try {
+        const DELTEbook = await BOOKS.findByIdAndDelete(req.params.id);
+        if (!DELTEbook) return res.status(400).send('Book not found.');
+        res.status(200).send('Book deleted successfully....');
+    } catch (error) {
+        console.log(error.message.red);
+        res.status(400).send(error.message);
+    }
 };
 
-module.exports = { getAllBooks, CreateBooks, UpdateABook, DeleteABook };
+module.exports = { getAllBooks, CreateBooks, UpdateABook, DeleteABook, getAbook };

@@ -97,7 +97,7 @@ const UpdateUser = async (req, res) => {
             new: true,
             runValidators: true
         });
-        res.send(`${Updateuser} has been updated sucessfully`).status(200);
+        res.status(200).send(`${Updateuser} has been updated sucessfully`);
     } catch (error) {
         console.log(error.message.red);
         res.status(400).send(error.message);
