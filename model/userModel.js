@@ -23,6 +23,7 @@ const userSchema = new mongoose.Schema(
         dateOfbirth: {
             type: Date
         },
+        Roles: ['Admin', 'Reader'],
         TOKEN: {
             type: String
         }

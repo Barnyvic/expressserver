@@ -15,19 +15,20 @@ const getAllUsers = async (req, res) => {
         UserName: user.UserName
     }));
     // sending the user back to the frontend
-    res.send(USER).status(200);
+    res.status(200).send(USER);
 };
 
 // CREATING A NEW USER
 const createNewUser = async (req, res) => {
-    // Get user input.
-    const { name, email, password, UserName, dateOfbirth } = req.body;
-
-    //Validate user input
-    if (!(email && password && name && dateOfbirth)) {
-        res.status(400).send('All input is required');
-    }
     try {
+        // Get user input.
+        const { name, email, password, UserName, dateOfbirth, role } = req.body;
+
+        //Validate user input
+        if (!(email && password && name && dateOfbirth, role)) {
+            res.status(400).send('All input is required');
+        }
+
         // Validate if the user already exists.
         const Allusers = await User.find();
         const oneUser = Allusers.find((user) => user.Name === name);
@@ -44,7 +45,8 @@ const createNewUser = async (req, res) => {
             Email: email,
             Password: hashPassword,
             dateOfbirth: dateOfbirth,
-            UserName: UserName
+            UserName: UserName,
+            Roles: [role]
         });
 
         //create a signed JWT token.
@@ -55,7 +57,7 @@ const createNewUser = async (req, res) => {
         res.status(201).send(NewUser);
     } catch (error) {
         console.log(error.message.red);
-        res.send(error.message).status(400);
+        res.status(400).send(error.message);
     }
 };
 
@@ -98,7 +100,7 @@ const UpdateUser = async (req, res) => {
         res.send(`${Updateuser} has been updated sucessfully`).status(200);
     } catch (error) {
         console.log(error.message.red);
-        res.send(error.message).status(400);
+        res.status(400).send(error.message);
     }
 };
 
@@ -108,10 +110,10 @@ const deleteUser = async (req, res) => {
     try {
         const deleteUser = await User.findByIdAndDelete(req.params.id);
         if (!deleteUser) return res.send('User does not exist');
-        res.send(`DELETED sucessfully`).status(200);
+        res.status(200).send(`DELETED sucessfully`);
     } catch (error) {
         console.log(error.message.red);
-        res.send(error.message).status(400);
+        res.status(400).send(error.message);
     }
 };
 
