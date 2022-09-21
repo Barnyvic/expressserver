@@ -2,8 +2,13 @@ const BOOKS = require('../model/bookModel');
 
 // getting AllBooks  from DATABASE
 const getAllBooks = async (req, res) => {
+    // implementing search in the api
+    let filter = {};
+    if (req.query.bookauthor) {
+        filter = { bookAuthor: req.query.bookauthor };
+    }
     try {
-        const AllBooks = await BOOKS.find();
+        const AllBooks = await BOOKS.find(filter);
         const result = AllBooks.map((book) => ({
             ID: book._id,
             ISBN: book.ISBN,
@@ -52,14 +57,12 @@ const CreateBooks = async (req, res) => {
 
 const UpdateABook = async (req, res) => {
     try {
-        const UPDATEbook = await BOOKS.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-            runValidators: true
-        });
-        res.status(200).send('Book updated successfully....');
-    } catch (error) {
-        console.log(error.message.red);
-        res.status(400).send(error.message);
+        const book = await BOOKS.findById(req.params.id);
+        Object.assign(book, req.body);
+        book.save();
+        res.send({ data: book });
+    } catch {
+        res.status(404).send({ error: 'Book is not found!' });
     }
 };
 
@@ -70,7 +73,7 @@ const DeleteABook = async (req, res) => {
         res.status(200).send('Book deleted successfully....');
     } catch (error) {
         console.log(error.message.red);
-        res.status(400).send(error.message);
+        res.status(404).send(error.message);
     }
 };
 
