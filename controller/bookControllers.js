@@ -61,11 +61,28 @@ const CreateBooks = async (req, res) => {
 };
 
 const UpdateABook = async (req, res) => {
+    // BOOKS.findOneAndUpdate( req.params.id , { $set: { ISBN: req.body.isbn } }, { new: true })
+    //     .then((docs) => {
+    //         if (docs) {
+    //             res.send({ success: true, data: docs });
+    //         } else {
+    //             res.send({ success: false, data: 'no such user exist' });
+    //         }
+    //     })
+    //     .catch((err) => {
+    //         reject(err);
+    //     });
+
     try {
-        const book = await BOOKS.findById(req.params.id);
-        Object.assign(book, req.body);
+        const book = await BOOKS.findByIdAndUpdate(
+            req.params.id,
+            { $set: { ISBN: req.body.isbn, bookTitle: req.body.booktitle, bookAuthor: req.body.bookauthor, bookDescription: req.body.bookdescription } },
+            {
+                new: true
+            }
+        );
         book.save();
-        res.send({ data: book });
+        res.status(200).send({ data: book });
     } catch {
         res.status(404).send({ error: 'Book is not found!' });
     }

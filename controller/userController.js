@@ -20,15 +20,14 @@ const getAllUsers = async (req, res) => {
 
 // CREATING A NEW USER
 const createNewUser = async (req, res) => {
+    // Get user input.
+    const { name, email, password, UserName, dateOfbirth, role } = req.body;
+
+    //Validate user input
+    if (!(email && password && name && dateOfbirth, role)) {
+        return res.status(400).send('All input is required');
+    }
     try {
-        // Get user input.
-        const { name, email, password, UserName, dateOfbirth, role } = req.body;
-
-        //Validate user input
-        if (!(email && password && name && dateOfbirth, role)) {
-            res.status(400).send('All input is required');
-        }
-
         // Validate if the user already exists.
         const Allusers = await User.find();
         const oneUser = Allusers.find((user) => user.Name === name);
@@ -46,7 +45,7 @@ const createNewUser = async (req, res) => {
             Password: hashPassword,
             dateOfbirth: dateOfbirth,
             UserName: UserName,
-            Roles: [role]
+            Role: role
         });
 
         //create a signed JWT token.
@@ -93,10 +92,13 @@ const login = async (req, res) => {
 
 const UpdateUser = async (req, res) => {
     try {
-        const Updateuser = await User.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-            runValidators: true
-        });
+        const Updateuser = await User.findByIdAndUpdate(
+            req.params.id,
+            { $set: { Name: req.body.name, Email: req.body.email, Password: req.body.password, dateOfbirth: req.body.dateOfbirth } },
+            {
+                new: true
+            }
+        );
         res.status(200).send(`${Updateuser} has been updated sucessfully`);
     } catch (error) {
         console.log(error.message.red);

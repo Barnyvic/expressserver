@@ -23,8 +23,8 @@ const VerifyToken = async (req, res, next) => {
 
 const authorizeUser = async (req, res, next) => {
     try {
-        const { Roles } = req.cookies;
-        if (Roles.includes('Admin')) {
+        const { Role } = req.cookies;
+        if (Role.includes('Admin')) {
             next();
         } else {
             res.status(401).send('You are not Authorized to open this file...');

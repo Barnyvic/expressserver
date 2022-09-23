@@ -17,10 +17,7 @@ const userSchema = new mongoose.Schema(
         Password: {
             type: String,
             minlength: [6, 'Password must be at least 6 characters long'],
-            match: [
-                /^(?=.*\d)(?=.*[@#\-_$%^&+=§!\?])(?=.*[a-z])(?=.*[A-Z])[0-9A-Za-z@#\-_$%^&+=§!\?]+$/,
-                'Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and a special characters'
-            ]
+            match: [/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,1024}$/, 'Password must contain at least 1 uppercase letter, 1 lowercase letter and 1 number']
         },
         UserName: {
             type: String,
@@ -29,10 +26,7 @@ const userSchema = new mongoose.Schema(
         dateOfbirth: {
             type: Date
         },
-        Roles: {
-            type: String,
-            enum: ['Admin', 'Reader']
-        },
+        Role: { type: String, enum: ['Admin', 'Reader'] },
         TOKEN: {
             type: String
         }
