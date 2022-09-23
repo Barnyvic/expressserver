@@ -29,7 +29,10 @@ const userSchema = new mongoose.Schema(
         dateOfbirth: {
             type: Date
         },
-        Roles: ['Admin', 'Reader'],
+        Roles: {
+            type: String,
+            enum: ['Admin', 'Reader']
+        },
         TOKEN: {
             type: String
         }

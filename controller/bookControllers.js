@@ -21,7 +21,7 @@ const getAllBooks = async (req, res) => {
             TITLE: book.bookTitle,
             DESCRIPTION: book.bookDescription
         }));
-        res.status(200).send(result);
+        res.status(200).send({ date: result, totalPages: Math.ceil(page / limit), currentPage: page });
     } catch (error) {
         console.log(error.message.red);
         res.status(400).send(error.message);
