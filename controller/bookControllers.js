@@ -61,18 +61,6 @@ const CreateBooks = async (req, res) => {
 };
 
 const UpdateABook = async (req, res) => {
-    // BOOKS.findOneAndUpdate( req.params.id , { $set: { ISBN: req.body.isbn } }, { new: true })
-    //     .then((docs) => {
-    //         if (docs) {
-    //             res.send({ success: true, data: docs });
-    //         } else {
-    //             res.send({ success: false, data: 'no such user exist' });
-    //         }
-    //     })
-    //     .catch((err) => {
-    //         reject(err);
-    //     });
-
     try {
         const book = await BOOKS.findByIdAndUpdate(
             req.params.id,
